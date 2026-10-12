@@ -1,37 +1,48 @@
-```python
+
 import streamlit as st
 from datetime import date
 
-st.title("Verificador de Alistamento Militar")
-
-st.write("Informe seus dados para verificar sua idade.")
-
-# Campo para digitar o nome
-nome = st.text_input("Digite seu nome:")
-
-# Campo para informar o ano de nascimento
-ano_nascimento = st.number_input(
-    "Digite seu ano de nascimento:",
-    min_value=1900,
-    max_value=date.today().year,
-    step=1
+st.set_page_config(
+    page_title="Verificador de Alistamento",
+    page_icon="🎖️"
 )
 
-# Botão para verificar
-if st.button("Verificar aptidão"):
+st.title("🎖️ Verificador de Alistamento Militar")
 
-    if nome.strip() == "":
-        st.warning("Por favor, digite seu nome.")
+st.write("Preencha seus dados abaixo.")
+
+nome = st.text_input("Nome completo")
+
+data_nascimento = st.date_input(
+    "Data de nascimento",
+    min_value=date(1900, 1, 1),
+    max_value=date.today(),
+    format="DD/MM/YYYY"
+)
+
+if st.button("Verificar aptidão", type="primary"):
+
+    if not nome.strip():
+        st.warning("Digite seu nome completo.")
 
     else:
-        ano_atual = date.today().year
-        idade = ano_atual - ano_nascimento
+        hoje = date.today()
 
-        st.write(f"Nome: {nome}")
-        st.write(f"Idade: {idade} anos")
+        idade = (
+            hoje.year
+            - data_nascimento.year
+            - (
+                (hoje.month, hoje.day)
+                < (data_nascimento.month, data_nascimento.day)
+            )
+        )
+
+        st.subheader("Resultado")
+
+        st.write(f"**Nome:** {nome}")
+        st.write(f"**Idade:** {idade} anos")
 
         if idade >= 18:
-            st.success("Você está apto para se alistar!")
+            st.success("Você está apto pelo critério de idade.")
         else:
-            st.error("Você ainda não está apto para se alistar.")
-```
+            st.error("Você ainda não atingiu 18 anos.")

@@ -1,11 +1,37 @@
-
+```python
 import streamlit as st
+from datetime import date
 
-st.title("Meu primeiro aplicativo")
+st.title("Verificador de Alistamento Militar")
 
-st.write("Olá! Meu aplicativo está funcionando.")
+st.write("Informe seus dados para verificar sua idade.")
 
-nome = st.text_input("Qual é o seu nome?")
+# Campo para digitar o nome
+nome = st.text_input("Digite seu nome:")
 
-if nome:
-    st.success(f"Seja bem-vindo, {nome}!")
+# Campo para informar o ano de nascimento
+ano_nascimento = st.number_input(
+    "Digite seu ano de nascimento:",
+    min_value=1900,
+    max_value=date.today().year,
+    step=1
+)
+
+# Botão para verificar
+if st.button("Verificar aptidão"):
+
+    if nome.strip() == "":
+        st.warning("Por favor, digite seu nome.")
+
+    else:
+        ano_atual = date.today().year
+        idade = ano_atual - ano_nascimento
+
+        st.write(f"Nome: {nome}")
+        st.write(f"Idade: {idade} anos")
+
+        if idade >= 18:
+            st.success("Você está apto para se alistar!")
+        else:
+            st.error("Você ainda não está apto para se alistar.")
+```
